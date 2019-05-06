@@ -138,12 +138,14 @@ output ssi0_xdat1;
 output ssi0_xdat2;
 output ssi0_xdat3;
 
-wire clk_105m;
+wire clk_110m;
+wire clk_110k;
 wire clk_1p8432m;
 wire clk_25m;
 wire locked;
 wire clk;
 wire clk_l;
+wire clk_u;
 wire rst;
 
 wire led_blnk;
@@ -185,22 +187,29 @@ assign led = {1'b1, 1'b0, led_blnk};
 
 pll pll (
 	.inclk0(clk_in),
-	.c0(clk_105m),
-	.c1(clk_1p8432m),
-	.c2(clk_25m),
+	.c0(clk_110m),
+	.c1(clk_110k),
+	.c2(clk_1p8432m),
+	.c3(clk_25m),
 	.locked(locked)
 	);
 	
 gsig_gen clk_gen (
 	.ena(1'b1),
-	.inclk(clk_105m),
+	.inclk(clk_110m),
 	.outclk(clk)
 	);
 	
 gsig_gen clk_l_gen (
 	.ena(1'b1),
-	.inclk(clk_1p8432m),
+	.inclk(clk_110k),
 	.outclk(clk_l)
+	);
+	
+gsig_gen clk_u_gen (
+	.ena(1'b1),
+	.inclk(clk_1p8432m),
+	.outclk(clk_u)
 	);
 	
 gsig_gen rst_gen (
@@ -216,7 +225,7 @@ led_blink led_blink(
 	);
 
 /*rtx_top rtx_top0 (
-	.clk(clk_l),
+	.clk(clk_u),
 	.clk_h(clk),
 	.rst(rst),
 	
@@ -247,7 +256,7 @@ led_blink led_blink(
 	);
 	
 rtx_top rtx_top0 (
-	.clk(clk_l),
+	.clk(clk_u),
 	.clk_h(clk),
 	.rst(rst),
 	
