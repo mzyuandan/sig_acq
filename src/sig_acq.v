@@ -74,6 +74,9 @@ module sig_acq(
 	ssi0_xdat2,
 	ssi0_xdat3
 	);
+	
+parameter NUM_A = 14;
+parameter NUM_PULSE = 12;
 
 
 input clk_in;
@@ -138,9 +141,9 @@ output ssi0_xdat1;
 output ssi0_xdat2;
 output ssi0_xdat3;
 
-wire clk_110m;
-wire clk_110k;
+wire clk_110p592m;
 wire clk_1p8432m;
+wire clk_14p7456m;
 wire clk_25m;
 wire locked;
 wire clk;
@@ -187,28 +190,28 @@ assign led = {1'b1, 1'b0, led_blnk};
 
 pll pll (
 	.inclk0(clk_in),
-	.c0(clk_110m),
-	.c1(clk_110k),
-	.c2(clk_1p8432m),
+	.c0(clk_110p592m),
+	.c1(clk_1p8432m),
+	.c2(clk_14p7456m),
 	.c3(clk_25m),
 	.locked(locked)
 	);
 	
 gsig_gen clk_gen (
 	.ena(1'b1),
-	.inclk(clk_110m),
+	.inclk(clk_110p592m),
 	.outclk(clk)
 	);
 	
 gsig_gen clk_l_gen (
 	.ena(1'b1),
-	.inclk(clk_110k),
+	.inclk(clk_1p8432m),
 	.outclk(clk_l)
 	);
 	
 gsig_gen clk_u_gen (
 	.ena(1'b1),
-	.inclk(clk_1p8432m),
+	.inclk(clk_14p7456m),
 	.outclk(clk_u)
 	);
 	
@@ -229,8 +232,21 @@ led_blink wdi_gen(
 	.rst(rst),
 	.led_out(wdi)
 	);
+	
+genvar i;
+generate
+  for(i=0; i<12; i=i+1)
+  begin:inst
+	assign re_start[i]=1'b0;
+	assign rd_dout_en[i]=1'b0;
+	assign find_sig[i]=1'b0;
+	assign pk_ck_oe[i]=1'b0;
+	assign pk_ck_dout[i]=32'd0;
+	assign dout_hilbert[i]=32'd0;
+  end
+endgenerate
 
-/*rtx_top rtx_top0 (
+/*uart uart0 (
 	.clk(clk_u),
 	.clk_h(clk),
 	.rst(rst),
@@ -261,7 +277,7 @@ led_blink wdi_gen(
 //	.rx_err(rx_err0)
 	);
 	
-rtx_top rtx_top0 (
+uart uart1 (
 	.clk(clk_u),
 	.clk_h(clk),
 	.rst(rst),
