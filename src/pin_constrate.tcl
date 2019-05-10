@@ -13,7 +13,7 @@ set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
 #----------------------------------------- GLOBLE signals ------------------------------------------# 
 set_location_assignment PIN_27 -to clk_in
 set_location_assignment PIN_29 -to rst_in
-
+set_location_assignment PIN_50 -to wdi
 
 #----------------------------------------- LED ------------------------------------------#
 set_location_assignment PIN_120 -to led[0]
@@ -75,7 +75,6 @@ set_location_assignment PIN_102 -to x10b34_sd
 set_location_assignment PIN_106 -to rad_pwr_on
 
 #----------------------------------------- Backup signals ------------------------------------------#
-set_location_assignment PIN_50 -to wdi
 set_location_assignment PIN_6 -to bk_din[0]
 set_location_assignment PIN_7 -to bk_din[1]
 set_location_assignment PIN_8 -to bk_din[2]

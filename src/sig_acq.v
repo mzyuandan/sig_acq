@@ -14,6 +14,7 @@
 module sig_acq(
 	clk_in,
 	rst_in,
+	wdi,
 	
 	led,
 	
@@ -61,7 +62,6 @@ module sig_acq(
 	x10b34_sd,
 	rad_pwr_on,
 	
-	wdi,
 	bk_din,
 	bk_v28_d,
 	
@@ -78,7 +78,8 @@ module sig_acq(
 
 input clk_in;
 input rst_in;
-	
+output wdi;	
+
 output [2:0] led;
 
 input rxd0;	
@@ -125,7 +126,6 @@ input x10b19_rdw;
 input x10b34_sd;
 input rad_pwr_on;
 	
-output wdi;	
 input [7:0] bk_din;
 input [7:0] bk_v28_d;
 
@@ -222,6 +222,12 @@ led_blink led_blink(
 	.clk(clk_25m),
 	.rst(rst),
 	.led_out(led_blnk)
+	);
+	
+led_blink wdi_gen(
+	.clk(clk_25m),
+	.rst(rst),
+	.led_out(wdi)
 	);
 
 /*rtx_top rtx_top0 (
