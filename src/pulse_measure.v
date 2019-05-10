@@ -20,32 +20,22 @@ module pulse_measure(
 	
 	count,
 	pulse_full,
-	pulse_10ms,
 	
-	latch_baud1, 
-	baud_word1, 
-	self_loop1, 
-	tx_fifo_wen1, 
-	tx_fifo_wdata1, 
-	tx_fifo_empty1, 
-	tx_fifo_full1, 
-	tx_fifo_usedw1, 
-	rx_fifo_ren1, 
-	rx_fifo_rdata1, 
-	rx_fifo_empty1, 
-	rx_fifo_full1, 
-	rx_fifo_usedw1, 
-	tx_work1, 
-	rx_overflow1
+	period,
+	width
 	);
 	
 input clk;
 input rst;
 input ena;
 
-input [27:0] count;
+input pulse;
+
+input [31:0] count;
 input pulse_full;
 
+output [31:0] period;
+output [31:0] width;
 
 
 reg pulse_r;
@@ -56,14 +46,13 @@ reg signed [32:0] period_e;
 reg signed [32:0] width_e;
 reg signed [32:0] period_p;
 reg signed [32:0] width_p;
-wire [31:0] period;
-wire [31:0] width;
+
 
 wire signed [32:0] count_s;
 
 assign count_s = {1'b0, count_s};
 
-always @(posedge clk or negedge rst)
+always @(posedge clk)
 	pulse_r <= pulse;
 
 always @(posedge clk or negedge rst)

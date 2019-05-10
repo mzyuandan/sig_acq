@@ -27,6 +27,7 @@ parameter COUNT_10MS = 32'd1105919;
 	
 input clk;
 input rst;
+input ena;
 
 input clr;
 
@@ -50,7 +51,7 @@ always @(posedge clk or negedge rst)
 		pulse_full <= 1'b0;
 	else if (clr)
 		pulse_full <= 1'b0;
-	else if (ena && count==32'hFFFFFFFF)
+	else if (count==32'hFFFFFFFF)
 		pulse_full <= 1'b1;
 	else
 		pulse_full <= 1'b0;
@@ -60,7 +61,7 @@ always @(posedge clk or negedge rst)
 		pulse_10ms <= 1'b0;
 	else if (clr)
 		pulse_10ms <= 1'b0;
-	else if (ena && count==COUNT_10MS)
+	else if (count==COUNT_10MS)
 		pulse_10ms <= 1'b1;
 	else
 		pulse_10ms <= 1'b0;

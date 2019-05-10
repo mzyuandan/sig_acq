@@ -12,7 +12,7 @@
 module init_ctrl(
 	clk,
 	rst,
-	locded,
+	locked,
 	
 	latch_baud0,
 	baud_word0, 
@@ -24,17 +24,16 @@ module init_ctrl(
 	
 parameter WAIT_LEN = 16'd32728;
 parameter INIT_ST = 16'd1000;
-parameter BAUD_WORD0_SET = 16'd1000;
-parameter BAUD_WORD0_SET = 16'd1000;
+parameter BAUD_WORD0_SET = 16'd2;
 	
 input clk;
 input rst;
-input locded;
+input locked;
 
 output reg latch_baud0;
-output reg [15:0] baud_word0; 
+output [15:0] baud_word0; 
 output reg latch_baud1;
-output reg [15:0] baud_word1;
+output [15:0] baud_word1;
 
 output reg done;
 
@@ -43,7 +42,7 @@ reg [15:0] cnt = 16'd0;
 
 
 
-always @(posedge clk or negedge rst)
+always @(posedge clk)
 	locked_r <= locked;
 
 always @(posedge clk or negedge rst)
@@ -54,7 +53,7 @@ always @(posedge clk or negedge rst)
 	else if (!done)
 		cnt <= cnt + 1'd1;	
 		
-always @(posedge clk clk or negedge rst)
+always @(posedge clk or negedge rst)
 	if (!rst)
 		done <= 1'b0;
 	else if (locked && !locked_r)
@@ -62,7 +61,7 @@ always @(posedge clk clk or negedge rst)
 	else if (cnt==WAIT_LEN)
 		done <= 1'b1;
 
-always @(posedge clk clk or negedge rst)
+always @(posedge clk or negedge rst)
 	if (!rst)
 		latch_baud0 <= 1'b0;
 	else if (cnt==INIT_ST)
@@ -70,7 +69,17 @@ always @(posedge clk clk or negedge rst)
 	else
 		latch_baud0 <= 1'b0;
 		
-assign baud_word0 = 16'd
+assign baud_word0 = BAUD_WORD0_SET;
+
+always @(posedge clk or negedge rst)
+	if (!rst)
+		latch_baud1 <= 1'b0;
+	else if (cnt==INIT_ST)
+		latch_baud1 <= 1'b1;
+	else
+		latch_baud1 <= 1'b0;
+		
+assign baud_word1 = BAUD_WORD0_SET;
 			
 		
 endmodule

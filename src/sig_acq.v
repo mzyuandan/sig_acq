@@ -75,7 +75,9 @@ module sig_acq(
 	ssi0_xdat3
 	);
 	
-parameter NUM_A = 14;
+parameter VERSION = 16'd0;	
+parameter NUM_ANALOG = 14;
+parameter NUM_DIGITAL = 14;
 parameter NUM_PULSE = 12;
 
 
@@ -150,40 +152,46 @@ wire clk;
 wire clk_l;
 wire clk_u;
 wire rst;
+wire ena;
 
 wire led_blnk;
 
+wire [31:0] count;
+wire pulse_full;
+wire pulse_10ms;
+
+
 wire latch_baud0;
 wire [15:0] baud_word0;
-wire self_loop0;
+//wire self_loop0;
 wire tx_fifo_wen0;
 wire [7:0] tx_fifo_wdata0;
-wire tx_fifo_empty0;
+//wire tx_fifo_empty0;
 wire tx_fifo_full0;
 wire [4:0] tx_fifo_usedw0;
-wire rx_fifo_full0;
-wire rx_fifo_empty0;
-wire [4:0] rx_fifo_usedw0;
-wire rx_fifo_ren0;
-wire [7:0] rx_fifo_rdata0;
-wire tx_work0;
-wire rx_overflow0;
+//wire rx_fifo_full0;
+//wire rx_fifo_empty0;
+//wire [4:0] rx_fifo_usedw0;
+//wire rx_fifo_ren0;
+//wire [7:0] rx_fifo_rdata0;
+//wire tx_work0;
+//wire rx_overflow0;
 
 wire latch_baud1;
 wire [15:0] baud_word1;
-wire self_loop1;
+//wire self_loop1;
 wire tx_fifo_wen1;
 wire [7:0] tx_fifo_wdata1;
-wire tx_fifo_empty1;
+//wire tx_fifo_empty1;
 wire tx_fifo_full1;
 wire [4:0] tx_fifo_usedw1;
-wire rx_fifo_full1;
-wire rx_fifo_empty1;
-wire [4:0] rx_fifo_usedw1;
-wire rx_fifo_ren1;
-wire [7:0] rx_fifo_rdata1;
-wire tx_work1;
-wire rx_overflow1;
+//wire rx_fifo_full1;
+//wire rx_fifo_empty1;
+//wire [4:0] rx_fifo_usedw1;
+//wire rx_fifo_ren1;
+//wire [7:0] rx_fifo_rdata1;
+//wire tx_work1;
+//wire rx_overflow1;
 	
 assign clk_arm = clk_25m;
 assign led = {1'b1, 1'b0, led_blnk};
@@ -233,18 +241,62 @@ led_blink wdi_gen(
 	.led_out(wdi)
 	);
 	
-genvar i;
-generate
-  for(i=0; i<12; i=i+1)
-  begin:inst
-	assign re_start[i]=1'b0;
-	assign rd_dout_en[i]=1'b0;
-	assign find_sig[i]=1'b0;
-	assign pk_ck_oe[i]=1'b0;
-	assign pk_ck_dout[i]=32'd0;
-	assign dout_hilbert[i]=32'd0;
-  end
-endgenerate
+init_ctrl init_ctrl(
+	.clk(clk),
+	.rst(rst),
+	.locked(locked),
+	
+	.latch_baud0(latch_baud0),
+	.baud_word0(baud_word0), 
+	.latch_baud1(latch_baud1),
+	.baud_word1(baud_word1),
+
+	.done(ena)
+	);
+	
+timer32 timer32(
+	.clk(clk),
+	.rst(rst),
+
+	.clr(1'b0),
+	.ena(ena),
+	
+	.count(count),
+	.pulse_full(pulse_full),
+	.pulse_10ms(pulse_10ms)
+	);	
+	
+trans_ctrl_uart1 #(
+	.VERSION(VERSION),
+	.NUM_PULSE(NUM_PULSE)
+	) trans_ctrl_uart1(
+	.clk(clk),
+	.rst(rst),
+	.ena(ena),
+	
+	.pulse0(x9b51_st),
+	.pulse1(x9b57_tr),
+	.pulse2(x9b54_tp),
+	.pulse3(x9b63_fsdp),
+	.pulse4(x10b1_lmt),
+	.pulse5(x10b4_fht),
+	.pulse6(x10b7_mdp),
+	.pulse7(x10b10_prf),
+	.pulse8(x10b13_frm),
+	.pulse9(x10b16_sdp),
+	.pulse10(x10b19_rdw),
+	.pulse11(x10b34_sd),
+	
+	.count(count),
+	.pulse_full(pulse_full),
+	.pulse_10ms(pulse_10ms),
+	
+	.tx_fifo_wen(tx_fifo_wen1), 
+	.tx_fifo_wdata(tx_fifo_wdata1), 
+	.tx_fifo_full(tx_fifo_full1), 
+	.tx_fifo_usedw(tx_fifo_usedw1)
+	);
+
 
 /*uart uart0 (
 	.clk(clk_u),
@@ -275,7 +327,7 @@ endgenerate
 	.rx_overflow(rx_overflow0)
 	
 //	.rx_err(rx_err0)
-	);
+	);*/
 	
 uart uart1 (
 	.clk(clk_u),
@@ -285,28 +337,28 @@ uart uart1 (
 	.latch_baud(latch_baud1),
 	.baud_word(baud_word1),	
 	
-	.self_loop(self_loop1),
+	//.self_loop(self_loop1),
 	
 	.rxd(rxd1),
 	.txd(txd1),
 	
 	.tx_fifo_wen(tx_fifo_wen1),
 	.tx_fifo_wdata(tx_fifo_wdata1),
-	.tx_fifo_empty(tx_fifo_empty1),
+	//.tx_fifo_empty(tx_fifo_empty1),
 	.tx_fifo_full(tx_fifo_full1),
 	.tx_fifo_usedw(tx_fifo_usedw1),
 	
-	.rx_fifo_ren(rx_fifo_ren1),
-	.rx_fifo_rdata(rx_fifo_rdata1),
-	.rx_fifo_empty(rx_fifo_empty1),
-	.rx_fifo_full(rx_fifo_full1),
-	.rx_fifo_usedw(rx_fifo_usedw1),
+	//.rx_fifo_ren(rx_fifo_ren1),
+	//.rx_fifo_rdata(rx_fifo_rdata1),
+	//.rx_fifo_empty(rx_fifo_empty1),
+	//.rx_fifo_full(rx_fifo_full1),
+	//.rx_fifo_usedw(rx_fifo_usedw1),
 	
-	.tx_work(tx_work1),
-	.rx_overflow(rx_overflow1)
+	//.tx_work(tx_work1),
+	//.rx_overflow(rx_overflow1)
 	
 //	.rx_err(rx_err1)
-	);*/
+	);
 
 
 endmodule
