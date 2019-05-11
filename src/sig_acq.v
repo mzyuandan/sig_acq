@@ -9,7 +9,6 @@
 //
 //-------------------------------------------------------------------------------------------------
 
-`timescale 1 ns/ 1 ps
 
 module sig_acq(
 	clk_in,
@@ -153,7 +152,7 @@ wire clk_l;
 wire clk_u;
 wire rst;
 wire init_done;
-reg ena;
+wire ena;
 
 wire led_blnk;
 
@@ -243,7 +242,9 @@ led_blink wdi_gen(
 	);
 	
 init_ctrl init_ctrl(
-	.clk(clk_u),
+	.clk(clk),
+	.clk_l(clk_l),
+	.clk_u(clk_u),
 	.rst(rst),
 	.locked(locked),
 	
@@ -251,12 +252,12 @@ init_ctrl init_ctrl(
 	.baud_word0(baud_word0), 
 	.latch_baud1(latch_baud1),
 	.baud_word1(baud_word1),
+	
+	.init_adc(init_adc),
 
-	.done(init_done)
+	.done(ena)
 	);
 	
-always @(posedge clk)
-	ena <= init_done;
 	
 timer32 timer32(
 	.clk(clk),
