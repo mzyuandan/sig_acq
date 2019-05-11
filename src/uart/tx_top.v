@@ -34,7 +34,7 @@ input tx_fifo_wen;
 input [7:0] tx_fifo_wdata;
 output wire tx_fifo_empty;
 output wire tx_fifo_full;
-output wire [4:0] tx_fifo_usedw;
+output wire [11:0] tx_fifo_usedw;
 
 output wire txd;
 output wire tx_work;

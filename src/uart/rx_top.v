@@ -41,7 +41,7 @@ input rx_fifo_ren;
 output wire [7:0] rx_fifo_rdata;
 output wire rx_fifo_empty;
 output wire rx_fifo_full;
-output wire [4:0] rx_fifo_usedw;
+output wire [11:0] rx_fifo_usedw;
 
 output reg rx_overflow;
 

@@ -67,7 +67,7 @@ input pulse_10ms;
 output reg tx_fifo_wen; 
 output reg [7:0] tx_fifo_wdata; 
 input tx_fifo_full; 
-input [4:0] tx_fifo_usedw;
+input [11:0] tx_fifo_usedw;
 
 wire [11:0] pulse;
 wire [31:0] period[NUM_PULSE-1:0];
@@ -140,10 +140,11 @@ always @(posedge clk or negedge rst)
 always @(posedge clk or negedge rst)
 	if (!rst)
 		tx_fifo_wen_p <= 1'b0;
-	else if (trans && tx_fifo_usedw<=5'd6)
-		tx_fifo_wen_p <= 1'b1;
-	else if (cnt_byte==3'd7 && cnt_byteX8==num_pulse_l)
+	else if ((cnt_byte==3'd7 && cnt_byteX8==num_pulse_l) || (tx_fifo_usedw==12'd2000))
 		tx_fifo_wen_p <= 1'b0;
+	else if (trans && tx_fifo_usedw<12'd2000)
+		tx_fifo_wen_p <= 1'b1;
+	
 		
 always @(posedge clk)
 	tx_fifo_wen <= tx_fifo_wen_p;

@@ -58,13 +58,13 @@ input tx_fifo_wen;
 input [7:0] tx_fifo_wdata;
 output wire tx_fifo_empty;
 output wire tx_fifo_full;
-output wire [4:0] tx_fifo_usedw;
+output wire [11:0] tx_fifo_usedw;
 
 input rx_fifo_ren;
 output wire [7:0] rx_fifo_rdata;
 output wire rx_fifo_empty;
 output wire rx_fifo_full;
-output wire [4:0] rx_fifo_usedw;
+output wire [11:0] rx_fifo_usedw;
 
 output wire tx_work;
 output wire rx_overflow;

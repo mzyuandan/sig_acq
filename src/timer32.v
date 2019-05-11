@@ -24,7 +24,7 @@ module timer32(
 	);
 
 //parameter COUNT_10MS = 32'd1105919;
-parameter COUNT_10MS = 32'd1024;
+parameter COUNT_10MS = 19;
 	
 input clk;
 input rst;
@@ -62,8 +62,8 @@ always @(posedge clk or negedge rst)
 		pulse_10ms <= 1'b0;
 	else if (clr)
 		pulse_10ms <= 1'b0;
-	else if (count[19:0]==10'd0)	//10ms
-	//else if (ena && count[9:0]==10'd0)	//10us, for test
+	//else if (count[19:0]==10'd0)	//10ms
+	else if (ena && count[9:0]==10'd0)	//10us, for test
 		pulse_10ms <= 1'b1;
 	else
 		pulse_10ms <= 1'b0;
