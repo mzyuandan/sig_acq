@@ -76,7 +76,7 @@ module sig_acq(
 	
 parameter VERSION = 16'd0;	
 parameter NUM_ANALOG = 14;
-parameter NUM_DIGITAL = 14;
+parameter NUM_DIGITAL = 2;
 parameter NUM_PULSE = 12;
 
 
@@ -92,7 +92,7 @@ input rxd1;
 output txd1;
 
 output cs0;
-output int0;
+input int0;
 output slck0;
 output fs0;
 output sdo0;
@@ -100,7 +100,7 @@ input  sdi0;
 output cstart0;
 	
 output cs1;
-output int1;
+input int1;
 output slck1;
 output fs1;
 output sdo1;
@@ -108,7 +108,7 @@ input  sdi1;
 output cstart1;
 	
 output cs2;
-output int2;
+input int2;
 output slck2;
 output fs2;
 output sdo2;
@@ -143,7 +143,7 @@ output ssi0_xdat2;
 output ssi0_xdat3;
 
 wire clk_110p592m;
-wire clk_1p8432m;
+wire clk_184p32k;
 wire clk_14p7456m;
 wire clk_25m;
 wire locked;
@@ -160,6 +160,7 @@ wire [31:0] count;
 wire pulse_full;
 wire pulse_10ms;
 
+wire init_adc;
 
 wire latch_baud0;
 wire [15:0] baud_word0;
@@ -199,7 +200,7 @@ assign led = {1'b1, 1'b0, led_blnk};
 pll pll (
 	.inclk0(clk_in),
 	.c0(clk_110p592m),
-	.c1(clk_1p8432m),
+	.c1(clk_184p32k),
 	.c2(clk_14p7456m),
 	.c3(clk_25m),
 	.locked(locked)
@@ -213,7 +214,7 @@ gsig_gen clk_gen (
 	
 gsig_gen clk_l_gen (
 	.ena(1'b1),
-	.inclk(clk_1p8432m),
+	.inclk(clk_184p32k),
 	.outclk(clk_l)
 	);
 	
@@ -271,6 +272,43 @@ timer32 timer32(
 	.pulse_10ms(pulse_10ms)
 	);	
 	
+trans_ctrl_uart0 trans_ctrl_uart0(
+	.clk(clk),
+	.clk_l(clk_l),
+	.rst(rst),
+	.ena(ena),
+	
+	.init_adc(init_adc),
+	
+	.cs_l0(cs0),
+	.int_l0(int0),
+	.slck0(slck0),
+	.fs0(fs0),
+	.sdo0(sdo0),
+	.sdi0(sdi0),
+	.cstart0(cstart0),
+	
+	.cs_l1(cs1),
+	.int_l1(int1),
+	.slck1(slck1),
+	.fs1(fs1),
+	.sdo1(sdo1),
+	.sdi1(sdi1),
+	.cstart1(cstart1),
+	
+	.digital0(x9b60_agc),
+	.digital1(rad_pwr_on),
+	
+	.count(count),
+	.pulse_full(pulse_full),
+	.pulse_10ms(pulse_10ms),
+	
+	.tx_fifo_wen(tx_fifo_wen0), 
+	.tx_fifo_wdata(tx_fifo_wdata0), 
+	.tx_fifo_full(tx_fifo_full0), 
+	.tx_fifo_usedw(tx_fifo_usedw0)
+	);
+	
 trans_ctrl_uart1 #(
 	.VERSION(VERSION),
 	.NUM_PULSE(NUM_PULSE)
@@ -303,7 +341,7 @@ trans_ctrl_uart1 #(
 	);
 
 
-/*uart uart0 (
+uart uart0 (
 	.clk(clk_u),
 	.clk_h(clk),
 	.rst(rst),
@@ -311,28 +349,28 @@ trans_ctrl_uart1 #(
 	.latch_baud(latch_baud0),
 	.baud_word(baud_word0),	
 	
-	.self_loop(self_loop0),
+	.self_loop(1'b0),
 	
 	.rxd(rxd0),
 	.txd(txd0),
 	
 	.tx_fifo_wen(tx_fifo_wen0),
 	.tx_fifo_wdata(tx_fifo_wdata0),
-	.tx_fifo_empty(tx_fifo_empty0),
+	//.tx_fifo_empty(tx_fifo_empty0),
 	.tx_fifo_full(tx_fifo_full0),
-	.tx_fifo_usedw(tx_fifo_usedw0),
+	.tx_fifo_usedw(tx_fifo_usedw0)
 	
-	.rx_fifo_ren(rx_fifo_ren0),
-	.rx_fifo_rdata(rx_fifo_rdata0),
-	.rx_fifo_empty(rx_fifo_empty0),
-	.rx_fifo_full(rx_fifo_full0),
-	.rx_fifo_usedw(rx_fifo_usedw0),
+	//.rx_fifo_ren(rx_fifo_ren0),
+	//.rx_fifo_rdata(rx_fifo_rdata0),
+	//.rx_fifo_empty(rx_fifo_empty0),
+	//.rx_fifo_full(rx_fifo_full0),
+	//.rx_fifo_usedw(rx_fifo_usedw0),
 	
-	.tx_work(tx_work0),
-	.rx_overflow(rx_overflow0)
+	//.tx_work(tx_work0),
+	//.rx_overflow(rx_overflow0)
 	
 //	.rx_err(rx_err0)
-	);*/
+	);
 	
 uart uart1 (
 	.clk(clk_u),
