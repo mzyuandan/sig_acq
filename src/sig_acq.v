@@ -152,7 +152,8 @@ wire clk;
 wire clk_l;
 wire clk_u;
 wire rst;
-wire ena;
+wire init_done;
+reg ena;
 
 wire led_blnk;
 
@@ -242,7 +243,7 @@ led_blink wdi_gen(
 	);
 	
 init_ctrl init_ctrl(
-	.clk(clk),
+	.clk(clk_u),
 	.rst(rst),
 	.locked(locked),
 	
@@ -251,8 +252,11 @@ init_ctrl init_ctrl(
 	.latch_baud1(latch_baud1),
 	.baud_word1(baud_word1),
 
-	.done(ena)
+	.done(init_done)
 	);
+	
+always @(posedge clk)
+	ena <= init_done;
 	
 timer32 timer32(
 	.clk(clk),
@@ -337,7 +341,7 @@ uart uart1 (
 	.latch_baud(latch_baud1),
 	.baud_word(baud_word1),	
 	
-	//.self_loop(self_loop1),
+	.self_loop(1'b0),
 	
 	.rxd(rxd1),
 	.txd(txd1),
@@ -346,7 +350,7 @@ uart uart1 (
 	.tx_fifo_wdata(tx_fifo_wdata1),
 	//.tx_fifo_empty(tx_fifo_empty1),
 	.tx_fifo_full(tx_fifo_full1),
-	.tx_fifo_usedw(tx_fifo_usedw1),
+	.tx_fifo_usedw(tx_fifo_usedw1)
 	
 	//.rx_fifo_ren(rx_fifo_ren1),
 	//.rx_fifo_rdata(rx_fifo_rdata1),

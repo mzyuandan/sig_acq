@@ -22,8 +22,8 @@ module init_ctrl(
 	done
 	);
 	
-parameter WAIT_LEN = 16'd32728;
-parameter INIT_ST = 16'd1000;
+parameter WAIT_LEN = 16'd200;
+parameter INIT_ST = 16'd100;
 parameter BAUD_WORD0_SET = 16'd2;
 	
 input clk;

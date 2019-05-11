@@ -5,7 +5,7 @@
 // Author		: mz
 // Company		: xkf
 // Date			: 2019.5.10
-// Description	: 28bit timer, with working clock 110.592MHz
+// Description	: 32bit timer, with working clock 110.592MHz
 //
 //-------------------------------------------------------------------------------------------------
 
@@ -23,7 +23,8 @@ module timer32(
 	pulse_10ms
 	);
 
-parameter COUNT_10MS = 32'd1105919;
+//parameter COUNT_10MS = 32'd1105919;
+parameter COUNT_10MS = 32'd1024;
 	
 input clk;
 input rst;
@@ -31,7 +32,7 @@ input ena;
 
 input clr;
 
-output reg [27:0] count;
+output reg [31:0] count;
 output reg pulse_full;
 output reg pulse_10ms;
 
@@ -61,7 +62,8 @@ always @(posedge clk or negedge rst)
 		pulse_10ms <= 1'b0;
 	else if (clr)
 		pulse_10ms <= 1'b0;
-	else if (count==COUNT_10MS)
+	else if (count[19:0]==10'd0)	//10ms
+	//else if (ena && count[9:0]==10'd0)	//10us, for test
 		pulse_10ms <= 1'b1;
 	else
 		pulse_10ms <= 1'b0;

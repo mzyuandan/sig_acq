@@ -76,17 +76,18 @@ wire [31:0] width[NUM_PULSE-1:0];
 reg trans;
 reg [2:0] cnt_byte;
 reg [4:0] cnt_byteX8;
+wire [4:0] cnt_signal;
 reg tx_fifo_wen_p;
 
 wire [15:0] version_l;
 wire [31:0] head_l;
 wire [15:0] num_pulse_l;
-wire [4:0] num_pulse_m1;
+//wire [4:0] num_pulse_m1;
 
 assign version_l = VERSION;
 assign head_l = HEAD;
 assign num_pulse_l = NUM_PULSE;
-assign num_pulse_m1 = NUM_PULSE - 1'd1;
+//assign num_pulse_m1 = NUM_PULSE - 1'd1;
 
 assign pulse = {pulse11, pulse10, pulse9, pulse8, pulse7, pulse6, 
 				pulse5, pulse4, pulse3, pulse2, pulse1, pulse0};
@@ -117,7 +118,7 @@ always @(posedge clk or negedge rst)
 		trans <= 1'b0;
 	else if (pulse_10ms && ena)
 		trans <= 1'b1;
-	else if (cnt_byte==3'd7 && cnt_byteX8==num_pulse_m1)
+	else if (cnt_byte==3'd7 && cnt_byteX8==num_pulse_l)
 		trans <= 1'b0;
 
 always @(posedge clk or negedge rst)
@@ -133,7 +134,7 @@ always @(posedge clk or negedge rst)
 		cnt_byteX8 <= 5'd0;
 	else if (pulse_10ms)
 		cnt_byteX8 <= 5'd0;
-	else if (trans && cnt_byte==3'b111)
+	else if (tx_fifo_wen_p && cnt_byte==3'b111)
 		cnt_byteX8 <= cnt_byteX8 + 1'd1;
 		
 always @(posedge clk or negedge rst)
@@ -141,11 +142,13 @@ always @(posedge clk or negedge rst)
 		tx_fifo_wen_p <= 1'b0;
 	else if (trans && tx_fifo_usedw<=5'd6)
 		tx_fifo_wen_p <= 1'b1;
-	else if (cnt_byte==3'd7 && cnt_byteX8==num_pulse_m1)
+	else if (cnt_byte==3'd7 && cnt_byteX8==num_pulse_l)
 		tx_fifo_wen_p <= 1'b0;
 		
 always @(posedge clk)
 	tx_fifo_wen <= tx_fifo_wen_p;
+	
+assign cnt_signal = cnt_byteX8 - 1'd1;
 		
 always @(posedge clk or negedge rst)
 	if (!rst)
@@ -157,20 +160,20 @@ always @(posedge clk or negedge rst)
 			3'd2 : tx_fifo_wdata <= head_l[23:16];
 			3'd3 : tx_fifo_wdata <= head_l[31:24];
 			3'd4 : tx_fifo_wdata <= version_l[7:0];
-			3'd5 : tx_fifo_wdata <= version_l[15:0];
+			3'd5 : tx_fifo_wdata <= version_l[15:8];
 			3'd6 : tx_fifo_wdata <= num_pulse_l[7:0];
-			3'd7 : tx_fifo_wdata <= num_pulse_l[15:0];
+			3'd7 : tx_fifo_wdata <= num_pulse_l[15:8];
 		endcase
 	else if (tx_fifo_wen_p && cnt_byteX8>5'd0)
 		case (cnt_byte)
-			3'd0 : tx_fifo_wdata <= cnt_byteX8 - 1'd1;
-			3'd1 : tx_fifo_wdata <= width[cnt_byteX8][7:0];
-			3'd2 : tx_fifo_wdata <= width[cnt_byteX8][15:8];
-			3'd3 : tx_fifo_wdata <= width[cnt_byteX8][23:16];
-			3'd4 : tx_fifo_wdata <= period[cnt_byteX8][7:0];
-			3'd5 : tx_fifo_wdata <= period[cnt_byteX8][15:0];
-			3'd6 : tx_fifo_wdata <= period[cnt_byteX8][23:16];
-			3'd7 : tx_fifo_wdata <= period[cnt_byteX8][31:24];
+			3'd0 : tx_fifo_wdata <= cnt_signal;
+			3'd1 : tx_fifo_wdata <= width[cnt_signal][7:0];
+			3'd2 : tx_fifo_wdata <= width[cnt_signal][15:8];
+			3'd3 : tx_fifo_wdata <= width[cnt_signal][23:16];
+			3'd4 : tx_fifo_wdata <= period[cnt_signal][7:0];
+			3'd5 : tx_fifo_wdata <= period[cnt_signal][15:8];
+			3'd6 : tx_fifo_wdata <= period[cnt_signal][23:16];
+			3'd7 : tx_fifo_wdata <= period[cnt_signal][31:24];
 		endcase
 
 

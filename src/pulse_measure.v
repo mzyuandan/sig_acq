@@ -50,7 +50,7 @@ reg signed [32:0] width_p;
 
 wire signed [32:0] count_s;
 
-assign count_s = {1'b0, count_s};
+assign count_s = {1'b0, count};
 
 always @(posedge clk)
 	pulse_r <= pulse;
