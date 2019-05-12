@@ -290,73 +290,73 @@ always @(posedge clk or negedge rst)
 			
 			7'b0010000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0010001 : tx_fifo_wdata <= 8'hCC;
-			7'b0010010 : tx_fifo_wdata <= ad_dat00[7:0];
-			7'b0010011 : tx_fifo_wdata <= {2'd0, ad_dat00[13:8]};
+			7'b0010010 : tx_fifo_wdata <= ad_dat02[7:0];
+			7'b0010011 : tx_fifo_wdata <= {2'd0, ad_dat02[13:8]};
 			
 			7'b0010100 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0010101 : tx_fifo_wdata <= 8'hCC;
-			7'b0010110 : tx_fifo_wdata <= ad_dat01[7:0];
-			7'b0010111 : tx_fifo_wdata <= {2'd0, ad_dat01[13:8]};
+			7'b0010110 : tx_fifo_wdata <= ad_dat03[7:0];
+			7'b0010111 : tx_fifo_wdata <= {2'd0, ad_dat03[13:8]};
 			
 			7'b0011000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0011001 : tx_fifo_wdata <= 8'hCC;
-			7'b0011010 : tx_fifo_wdata <= ad_dat02[7:0];
-			7'b0011011 : tx_fifo_wdata <= {2'd0, ad_dat02[13:8]};
+			7'b0011010 : tx_fifo_wdata <= ad_dat04[7:0];
+			7'b0011011 : tx_fifo_wdata <= {2'd0, ad_dat04[13:8]};
 			
 			7'b0011100 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0011101 : tx_fifo_wdata <= 8'hCC;
-			7'b0011110 : tx_fifo_wdata <= ad_dat03[7:0];
-			7'b0011111 : tx_fifo_wdata <= {2'd0, ad_dat03[13:8]};
+			7'b0011110 : tx_fifo_wdata <= ad_dat05[7:0];
+			7'b0011111 : tx_fifo_wdata <= {2'd0, ad_dat05[13:8]};
 			
 			7'b0100000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0100001 : tx_fifo_wdata <= 8'hCC;
-			7'b0100010 : tx_fifo_wdata <= ad_dat04[7:0];
-			7'b0100011 : tx_fifo_wdata <= {2'd0, ad_dat04[13:8]};
+			7'b0100010 : tx_fifo_wdata <= ad_dat06[7:0];
+			7'b0100011 : tx_fifo_wdata <= {2'd0, ad_dat06[13:8]};
 			
 			7'b0100100 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0100101 : tx_fifo_wdata <= 8'hCC;
-			7'b0100110 : tx_fifo_wdata <= ad_dat05[7:0];
-			7'b0100111 : tx_fifo_wdata <= {2'd0, ad_dat05[13:8]};
+			7'b0100110 : tx_fifo_wdata <= ad_dat07[7:0];
+			7'b0100111 : tx_fifo_wdata <= {2'd0, ad_dat07[13:8]};
 			
 			7'b0101000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0101001 : tx_fifo_wdata <= 8'hCC;
-			7'b0101010 : tx_fifo_wdata <= ad_dat06[7:0];
-			7'b0101011 : tx_fifo_wdata <= {2'd0, ad_dat06[13:8]};
+			7'b0101010 : tx_fifo_wdata <= ad_dat10[7:0];
+			7'b0101011 : tx_fifo_wdata <= {2'd0, ad_dat10[13:8]};
 			
 			7'b0101100 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0101101 : tx_fifo_wdata <= 8'hCC;
-			7'b0101110 : tx_fifo_wdata <= ad_dat07[7:0];
-			7'b0101111 : tx_fifo_wdata <= {2'd0, ad_dat07[13:8]};
+			7'b0101110 : tx_fifo_wdata <= ad_dat11[7:0];
+			7'b0101111 : tx_fifo_wdata <= {2'd0, ad_dat11[13:8]};
 			
 			7'b0110000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0110001 : tx_fifo_wdata <= 8'hCC;
-			7'b0110010 : tx_fifo_wdata <= ad_dat10[7:0];
-			7'b0110011 : tx_fifo_wdata <= {2'd0, ad_dat10[13:8]};
+			7'b0110010 : tx_fifo_wdata <= ad_dat12[7:0];
+			7'b0110011 : tx_fifo_wdata <= {2'd0, ad_dat12[13:8]};
 			
 			7'b0110100 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0110101 : tx_fifo_wdata <= 8'hCC;
-			7'b0110110 : tx_fifo_wdata <= ad_dat11[7:0];
-			7'b0110111 : tx_fifo_wdata <= {2'd0, ad_dat11[13:8]};
+			7'b0110110 : tx_fifo_wdata <= ad_dat13[7:0];
+			7'b0110111 : tx_fifo_wdata <= {2'd0, ad_dat13[13:8]};
 			
 			7'b0111000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0111001 : tx_fifo_wdata <= 8'hCC;
-			7'b0111010 : tx_fifo_wdata <= ad_dat12[7:0];
-			7'b0111011 : tx_fifo_wdata <= {2'd0, ad_dat12[13:8]};
+			7'b0111010 : tx_fifo_wdata <= ad_dat17[7:0];
+			7'b0111011 : tx_fifo_wdata <= {2'd0, ad_dat17[13:8]};
 			
-			7'b0111100 : tx_fifo_wdata <= {3'd0, cnt_signal};
-			7'b0111101 : tx_fifo_wdata <= 8'hCC;
-			7'b0111110 : tx_fifo_wdata <= ad_dat13[7:0];
-			7'b0111111 : tx_fifo_wdata <= {2'd0, ad_dat13[13:8]};
+			7'b0111100 : tx_fifo_wdata <= {3'd0, cnt_signal};     
+			7'b0111101 : tx_fifo_wdata <= 8'hCC;     
+			7'b0111110 : tx_fifo_wdata <= ad_dat14[7:0];     
+			7'b0111111 : tx_fifo_wdata <= {2'd0, ad_dat14[13:8]};     
 			
 			7'b1000000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b1000001 : tx_fifo_wdata <= 8'hCC;
-			7'b1000010 : tx_fifo_wdata <= ad_dat14[7:0];
-			7'b1000011 : tx_fifo_wdata <= {2'd0, ad_dat14[13:8]};
+			7'b1000010 : tx_fifo_wdata <= ad_dat15[7:0];
+			7'b1000011 : tx_fifo_wdata <= {2'd0, ad_dat15[13:8]};
 			
 			7'b1000100 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b1000101 : tx_fifo_wdata <= 8'hCC;
-			7'b1000110 : tx_fifo_wdata <= ad_dat15[7:0];
-			7'b1000111 : tx_fifo_wdata <= {2'd0, ad_dat15[13:8]};
+			7'b1000110 : tx_fifo_wdata <= ad_dat16[7:0];
+			7'b1000111 : tx_fifo_wdata <= {2'd0, ad_dat16[13:8]};
 			
 			default	   : tx_fifo_wdata <= 8'd0;
 		endcase
