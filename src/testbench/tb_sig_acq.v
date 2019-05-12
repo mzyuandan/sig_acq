@@ -33,24 +33,24 @@ wire txd1;
 reg rxd1;
 	
 wire cs0;
-wire int0;
-wire slck0;
+reg int0;
+wire sclk0;
 wire fs0;
 wire sdo0;
-reg sdi0;
+wire sdi0;
 wire cstart0;
 	
 wire cs1;
-wire int1;
-wire slck1;
+reg int1;
+wire sclk1;
 wire fs1;
 wire sdo1;
-reg sdi1;
+wire sdi1;
 wire cstart1;
 
 wire cs2;
-wire int2;
-wire slck2;
+reg int2;
+wire sclk2;
 wire fs2;
 wire sdo2;
 reg sdi2;
@@ -85,6 +85,15 @@ wire ssi0_xdat3;
 
 wire [31:0] count;
 
+reg sdo_val0;
+reg sdo_val1;
+reg [13:0] reg_di0;
+reg [13:0] reg_di1;
+reg reg_shift0;
+reg [3:0] cnt_shift0;
+reg reg_shift1;
+reg [3:0] cnt_shift1;
+
 integer fp_r;
 integer fp_w;
 
@@ -111,14 +120,13 @@ begin
 	rst_board = 1'b1;
 	rxd0 = 1'b0;
 	rxd1 = 1'b0;
-	sdi0 = 1'b0;
-	sdi1 = 1'b0;
+	int2 = 1'b1;
 	sdi2 = 1'b0;
 	x9b51_st = 1'b0;
 	// x9b57_tr = 1'b0;
 	// x9b54_tp = 1'b0;
 	x9b63_fsdp = 1'b0;
-	x9b60_agc = 1'b0;
+	x9b60_agc = 1'b1;
 	x10b1_lmt = 1'b0;
 	x10b4_fht = 1'b0;
 	x10b7_mdp = 1'b0;
@@ -129,7 +137,7 @@ begin
 	x10b34_sd = 1'b0;
 	rad_pwr_on = 1'b0;
 	bk_din = 8'd0;
-	bk_v28_d = 8'd0;
+	bk_v28_d = 8'd1;
 
 	//reset
 	@(posedge clk_in);
@@ -139,11 +147,7 @@ begin
 	#`SD rst_board = 1'b1;
 	@(posedge clk_in);
 
-	
-	
-	
-	
-	
+		
 	// repeat(1)
 		// @(posedge eclk_in);
 
@@ -151,6 +155,120 @@ begin
 	// $fclose(fp_w);
 	// $stop;
 end
+
+initial begin
+	int0 = 1'b1;
+	sdo_val0 = 1'b0;
+		
+	@(posedge fs0);
+		
+	repeat (100) begin
+		repeat (9) begin
+			@(posedge fs0);
+		end
+		
+		repeat (50) begin
+			@(posedge sclk0);
+		end
+		#`SD;
+		int0 = 1'b0;
+		sdo_val0 = 1'b1;
+		
+		@(posedge fs0);
+		#`SD int0 = 1'b1;
+		
+		repeat (7)
+			@(posedge fs0);
+		repeat (50) begin
+			@(posedge sclk0);
+		end
+		#`SD sdo_val0 = 1'b0;
+	end
+end
+
+assign sdi0 = reg_di0[13];
+
+always @(posedge sclk0 or negedge rst_board)
+	if (!rst_board)
+		reg_shift0 <= 1'b0;
+	else if (fs0 && sdo_val0)
+		reg_shift0 <= 1'b1;
+	else if (reg_shift0 && cnt_shift0==4'd13)
+		reg_shift0 <= 1'b0;
+		
+always @(posedge sclk0 or negedge rst_board)
+	if (!rst_board)
+		cnt_shift0 <= 4'd0;
+	else if (fs0 && sdo_val0)
+		cnt_shift0 <= 4'd0;
+	else if (reg_shift0 && cnt_shift0<4'd13)
+		cnt_shift0 <= cnt_shift0 + 1'd1;
+
+always @(posedge sclk0 or negedge rst_board)
+	if (!rst_board)
+		reg_di0 <= 14'd0;
+	else if (fs0 && sdo_val0)
+		reg_di0 <= reg_di0 + 1'd1;
+	else if (reg_shift0)
+		reg_di0 <= {reg_di0[12:0], reg_di0[13]};
+		
+
+initial begin
+	int1 = 1'b1;
+	sdo_val1 = 1'b0;
+		
+	@(posedge fs1);
+	
+	repeat (100) begin
+		repeat (9) begin
+			@(posedge fs1);
+		end
+		
+		repeat (50) begin
+			@(posedge sclk1);
+		end
+		#`SD;
+		int1 = 1'b0;
+		sdo_val1 = 1'b1;
+		
+		@(posedge fs1);
+		#`SD int1 = 1'b1;
+		
+		repeat (7)
+			@(posedge fs1);
+		repeat (50) begin
+			@(posedge sclk1);
+		end
+		#`SD sdo_val1 = 1'b0;
+	end
+end
+		
+assign sdi1 = reg_di1[13];
+
+always @(posedge sclk1 or negedge rst_board)
+	if (!rst_board)
+		reg_shift1 <= 1'b0;
+	else if (fs1 && sdo_val1)
+		reg_shift1 <= 1'b1;
+	else if (reg_shift1 && cnt_shift1==4'd13)
+		reg_shift1 <= 1'b0;
+		
+always @(posedge sclk1 or negedge rst_board)
+	if (!rst_board)
+		cnt_shift1 <= 4'd0;
+	else if (fs1 && sdo_val1)
+		cnt_shift1 <= 4'd0;
+	else if (reg_shift1 && cnt_shift1<4'd13)
+		cnt_shift1 <= cnt_shift1 + 1'd1;
+
+always @(posedge sclk1 or negedge rst_board)
+	if (!rst_board)
+		reg_di1 <= 14'd0;
+	else if (fs1 && sdo_val1)
+		reg_di1 <= reg_di1 + 1'd1;
+	else if (reg_shift1)
+		reg_di1 <= {reg_di1[12:0], reg_di1[13]};
+		
 
 always @(posedge clk_in or negedge rst_board)
 	if (!rst_board)
@@ -204,7 +322,7 @@ sig_acq sig_acq(
 	
 	.cs0(cs0),
 	.int0(int0),
-	.slck0(slck0),
+	.sclk0(sclk0),
 	.fs0(fs0),
 	.sdo0(sdo0),
 	.sdi0(sdi0),
@@ -212,7 +330,7 @@ sig_acq sig_acq(
 	
 	.cs1(cs1),
 	.int1(int1),
-	.slck1(slck1),
+	.sclk1(sclk1),
 	.fs1(fs1),
 	.sdo1(sdo1),
 	.sdi1(sdi1),
@@ -220,7 +338,7 @@ sig_acq sig_acq(
 	
 	.cs2(cs2),
 	.int2(int2),
-	.slck2(slck2),
+	.sclk2(sclk2),
 	.fs2(fs2),
 	.sdo2(sdo2),
 	.sdi2(sdi2),

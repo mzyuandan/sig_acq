@@ -31,7 +31,7 @@ set_location_assignment PIN_52 -to txd1
 #----------------------------------------- ADC0 ------------------------------------------#
 set_location_assignment PIN_70 -to cs0
 set_location_assignment PIN_66 -to int0
-set_location_assignment PIN_62 -to slck0
+set_location_assignment PIN_62 -to sclk0
 set_location_assignment PIN_64 -to fs0
 set_location_assignment PIN_65 -to sdo0
 set_location_assignment PIN_69 -to sdi0
@@ -41,7 +41,7 @@ set_location_assignment PIN_47 -to cstart0
 #----------------------------------------- ADC1 ------------------------------------------#
 set_location_assignment PIN_79 -to cs1
 set_location_assignment PIN_77 -to int1
-set_location_assignment PIN_74 -to slck1
+set_location_assignment PIN_74 -to sclk1
 set_location_assignment PIN_75 -to fs1
 set_location_assignment PIN_76 -to sdo1
 set_location_assignment PIN_78 -to sdi1
@@ -51,7 +51,7 @@ set_location_assignment PIN_80 -to cstart1
 #----------------------------------------- ADC2 ------------------------------------------#
 set_location_assignment PIN_110 -to cs2
 set_location_assignment PIN_113 -to int2
-set_location_assignment PIN_119 -to slck2
+set_location_assignment PIN_119 -to sclk2
 set_location_assignment PIN_118 -to fs2
 set_location_assignment PIN_114 -to sdo2
 set_location_assignment PIN_111 -to sdi2

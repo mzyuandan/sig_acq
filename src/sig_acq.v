@@ -24,7 +24,7 @@ module sig_acq(
 	
 	cs0,
 	int0,
-	slck0,
+	sclk0,
 	fs0,
 	sdo0,
 	sdi0,
@@ -32,7 +32,7 @@ module sig_acq(
 	
 	cs1,
 	int1,
-	slck1,
+	sclk1,
 	fs1,
 	sdo1,
 	sdi1,
@@ -40,7 +40,7 @@ module sig_acq(
 	
 	cs2,
 	int2,
-	slck2,
+	sclk2,
 	fs2,
 	sdo2,
 	sdi2,
@@ -93,7 +93,7 @@ output txd1;
 
 output cs0;
 input int0;
-output slck0;
+output sclk0;
 output fs0;
 output sdo0;
 input  sdi0;
@@ -101,7 +101,7 @@ output cstart0;
 	
 output cs1;
 input int1;
-output slck1;
+output sclk1;
 output fs1;
 output sdo1;
 input  sdi1;
@@ -109,7 +109,7 @@ output cstart1;
 	
 output cs2;
 input int2;
-output slck2;
+output sclk2;
 output fs2;
 output sdo2;
 input  sdi2;
@@ -282,7 +282,7 @@ trans_ctrl_uart0 trans_ctrl_uart0(
 	
 	.cs_l0(cs0),
 	.int_l0(int0),
-	.slck0(slck0),
+	.sclk0(sclk0),
 	.fs0(fs0),
 	.sdo0(sdo0),
 	.sdi0(sdi0),
@@ -290,7 +290,7 @@ trans_ctrl_uart0 trans_ctrl_uart0(
 	
 	.cs_l1(cs1),
 	.int_l1(int1),
-	.slck1(slck1),
+	.sclk1(sclk1),
 	.fs1(fs1),
 	.sdo1(sdo1),
 	.sdi1(sdi1),

@@ -30,9 +30,8 @@ module init_ctrl(
 parameter WAIT_LEN_U = 16'd200;
 parameter INIT_ST_U = 16'd100;
 parameter BAUD_WORD0_SET = 16'd2;
-parameter WAIT_LEN_L = 16'd25;
-parameter INIT_ST_L0 = 16'd4;
-parameter INIT_ST_L1 = 16'd24;
+parameter WAIT_LEN_L = 16'd30;
+parameter INIT_ST_L = 16'd4;
 	
 input clk;
 input clk_l;
@@ -120,7 +119,7 @@ always @(posedge clk_l or negedge rst)
 always @(posedge clk_l or negedge rst)
 	if (!rst)
 		init_adc <= 1'b0;
-	else if (cnt_u==INIT_ST_L0)
+	else if (cnt_l==INIT_ST_L)
 		init_adc <= 1'b1;
 	else
 		init_adc <= 1'b0;
