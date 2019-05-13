@@ -29,7 +29,7 @@ module init_ctrl(
 	
 parameter WAIT_LEN_U = 16'd200;
 parameter INIT_ST_U = 16'd100;
-parameter BAUD_WORD0_SET = 16'd2;
+parameter BAUD_WORD0_SET = 16'd8;
 parameter WAIT_LEN_L = 16'd30;
 parameter INIT_ST_L = 16'd4;
 	

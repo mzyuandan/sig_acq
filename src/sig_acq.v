@@ -155,6 +155,8 @@ wire init_done;
 wire ena;
 
 wire led_blnk;
+wire x9b54_tp_test;
+wire x9b57_tr_test;
 
 wire [31:0] count;
 wire pulse_full;
@@ -195,7 +197,7 @@ wire [11:0] tx_fifo_usedw1;
 //wire rx_overflow1;
 	
 assign clk_arm = clk_25m;
-assign led = {1'b1, 1'b0, led_blnk};
+assign led = {x9b54_tp_test, x9b57_tr_test, led_blnk};
 
 pll pll (
 	.inclk0(clk_in),
@@ -401,6 +403,19 @@ uart uart1 (
 	//.rx_overflow(rx_overflow1)
 	
 //	.rx_err(rx_err1)
+	);
+	
+	
+// Code beloww this is for test
+pulse_gen pulse_gen(
+	.clk(clk),
+	.rst(rst),
+
+	.clr(1'b0),
+	.ena(1'b1),
+	
+	.pulse0(x9b57_tr_test),
+	.pulse1(x9b54_tp_test)
 	);
 
 

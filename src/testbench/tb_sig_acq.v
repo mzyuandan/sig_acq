@@ -57,8 +57,8 @@ reg sdi2;
 wire cstart2;
 	
 reg x9b51_st;
-reg x9b57_tr;
-reg x9b54_tp;
+wire x9b57_tr;
+wire x9b54_tp;
 reg x9b63_fsdp;
 reg x9b60_agc;
 reg x10b1_lmt;
@@ -268,23 +268,18 @@ always @(posedge sclk1 or negedge rst_board)
 		reg_di1 <= reg_di1 + 1'd1;
 	else if (reg_shift1)
 		reg_di1 <= {reg_di1[12:0], reg_di1[13]};
-		
 
-always @(posedge clk_in or negedge rst_board)
-	if (!rst_board)
-		x9b57_tr <= 1'b0;
-	else if (count[9:0]>=10'd100 && count[9:0]<10'd120)
-		x9b57_tr <= 1'b1;
-	else
-		x9b57_tr <= 1'b0;
 		
-always @(posedge clk_in or negedge rst_board)
-	if (!rst_board)
-		x9b54_tp <= 1'b0;
-	else if (count[10:0]>=11'd400 && count[10:0]<11'd500)
-		x9b54_tp <= 1'b1;
-	else
-		x9b54_tp <= 1'b0;
+pulse_gen pulse_gen(
+	.clk(clk_in),
+	.rst(rst_board),
+
+	.clr(1'b0),
+	.ena(1'b1),
+	
+	.pulse0(x9b57_tr),
+	.pulse1(x9b54_tp)
+	);
 		
 
 // always @(posedge eclk_in)

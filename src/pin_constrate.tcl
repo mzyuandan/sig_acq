@@ -24,8 +24,10 @@ set_location_assignment PIN_130 -to led[2]
 #----------------------------------------- UART ------------------------------------------#
 set_location_assignment PIN_60 -to rxd0
 set_location_assignment PIN_59 -to txd0
-set_location_assignment PIN_54 -to rxd1
-set_location_assignment PIN_52 -to txd1
+# set_location_assignment PIN_54 -to rxd1
+# set_location_assignment PIN_52 -to txd1
+set_location_assignment PIN_6 -to rxd1
+set_location_assignment PIN_11 -to txd1
 
 
 #----------------------------------------- ADC0 ------------------------------------------#
@@ -75,11 +77,13 @@ set_location_assignment PIN_102 -to x10b34_sd
 set_location_assignment PIN_106 -to rad_pwr_on
 
 #----------------------------------------- Backup signals ------------------------------------------#
-set_location_assignment PIN_6 -to bk_din[0]
+# set_location_assignment PIN_6 -to bk_din[0]
+set_location_assignment PIN_54 -to bk_din[0]
 set_location_assignment PIN_7 -to bk_din[1]
 set_location_assignment PIN_8 -to bk_din[2]
 set_location_assignment PIN_10 -to bk_din[3]
-set_location_assignment PIN_11 -to bk_din[4]
+# set_location_assignment PIN_11 -to bk_din[4]
+set_location_assignment PIN_52 -to bk_din[4]
 set_location_assignment PIN_12 -to bk_din[5]
 set_location_assignment PIN_13 -to bk_din[6]
 set_location_assignment PIN_14 -to bk_din[7]
