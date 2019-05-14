@@ -31,6 +31,7 @@ module trans_ctrl_uart1(
 	count,
 	pulse_full,
 	pulse_10ms,
+	cnt_10ms,
 	
 	tx_fifo_wen, 
 	tx_fifo_wdata, 
@@ -62,6 +63,7 @@ input pulse11;
 input [31:0] count;
 input pulse_full;
 input pulse_10ms;
+input [15:0] cnt_10ms;
 
 output reg tx_fifo_wen; 
 output reg [7:0] tx_fifo_wdata; 
@@ -159,8 +161,8 @@ always @(posedge clk or negedge rst)
 			3'd1 : tx_fifo_wdata <= head_l[15:8];
 			3'd2 : tx_fifo_wdata <= head_l[23:16];
 			3'd3 : tx_fifo_wdata <= head_l[31:24];
-			3'd4 : tx_fifo_wdata <= version_l[7:0];
-			3'd5 : tx_fifo_wdata <= version_l[15:8];
+			3'd4 : tx_fifo_wdata <= cnt_10ms[7:0];
+			3'd5 : tx_fifo_wdata <= cnt_10ms[15:8];
 			3'd6 : tx_fifo_wdata <= num_pulse_l[7:0];
 			3'd7 : tx_fifo_wdata <= num_pulse_l[15:8];
 		endcase

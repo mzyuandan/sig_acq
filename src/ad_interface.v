@@ -106,6 +106,8 @@ always @(posedge clk or negedge rst)
 always @(posedge clk or negedge rst)
 	if (!rst)
 		chan_sel <= 1'b0;
+	else if (!int_l && int_l_r)
+		chan_sel <= 1'b0;
 	else if (cfg_en && cnt_conv==NUM_CLK)
 		chan_sel <= 1'b1;
 	else if (chan_sel && cnt_conv==NUM_CLK && cnt_chan==3'd0)
@@ -186,9 +188,10 @@ always @(posedge clk or negedge rst)
 	else if (fs)
 		case (state)
 			4'b0001: out_reg <= 16'hA000;
-			4'b0010: out_reg <= 16'hAA40;
+			4'b0010: out_reg <= 16'hA240;
 			4'b0100: out_reg <= {1'b0, cnt_chan, 12'd0};
 			4'b1000: out_reg <= 16'hE000;
+			default: out_reg <= 16'h0000;
 		endcase
 	else if (shift)
 		out_reg <= {out_reg[14:0], 1'b0};

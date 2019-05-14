@@ -40,6 +40,7 @@ module trans_ctrl_uart0(
 	count,
 	pulse_full,
 	pulse_10ms,
+	cnt_10ms,
 	
 	tx_fifo_wen, 
 	tx_fifo_wdata, 
@@ -83,6 +84,7 @@ input digital1;
 input [31:0] count;
 input pulse_full;
 input pulse_10ms;
+input [15:0] cnt_10ms;
 
 output reg tx_fifo_wen; 
 output reg [7:0] tx_fifo_wdata; 

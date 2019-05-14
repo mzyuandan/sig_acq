@@ -22,10 +22,12 @@ set_location_assignment PIN_130 -to led[2]
 
 
 #----------------------------------------- UART ------------------------------------------#
-set_location_assignment PIN_60 -to rxd0
-set_location_assignment PIN_59 -to txd0
+# set_location_assignment PIN_60 -to rxd0
+# set_location_assignment PIN_59 -to txd0
 # set_location_assignment PIN_54 -to rxd1
 # set_location_assignment PIN_52 -to txd1
+set_location_assignment PIN_60 -to rxd0
+set_location_assignment PIN_59 -to txd0
 set_location_assignment PIN_6 -to rxd1
 set_location_assignment PIN_11 -to txd1
 

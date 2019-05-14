@@ -161,6 +161,7 @@ wire x9b57_tr_test;
 wire [31:0] count;
 wire pulse_full;
 wire pulse_10ms;
+wire [15:0] cnt_10ms;
 
 wire init_adc;
 
@@ -271,7 +272,8 @@ timer32 timer32(
 	
 	.count(count),
 	.pulse_full(pulse_full),
-	.pulse_10ms(pulse_10ms)
+	.pulse_10ms(pulse_10ms),
+	.cnt_10ms(cnt_10ms)
 	);	
 	
 trans_ctrl_uart0 trans_ctrl_uart0(
@@ -304,6 +306,7 @@ trans_ctrl_uart0 trans_ctrl_uart0(
 	.count(count),
 	.pulse_full(pulse_full),
 	.pulse_10ms(pulse_10ms),
+	.cnt_10ms(cnt_10ms),
 	
 	.tx_fifo_wen(tx_fifo_wen0), 
 	.tx_fifo_wdata(tx_fifo_wdata0), 
@@ -335,6 +338,7 @@ trans_ctrl_uart1 #(
 	.count(count),
 	.pulse_full(pulse_full),
 	.pulse_10ms(pulse_10ms),
+	.cnt_10ms(cnt_10ms),
 	
 	.tx_fifo_wen(tx_fifo_wen1), 
 	.tx_fifo_wdata(tx_fifo_wdata1), 
