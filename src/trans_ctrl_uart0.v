@@ -275,19 +275,19 @@ always @(posedge clk or negedge rst)
 			7'b0000010 : tx_fifo_wdata <= head_l[23:16];
 			7'b0000011 : tx_fifo_wdata <= head_l[31:24];
 			
-			7'b0000100 : tx_fifo_wdata <= version_l[7:0];
-			7'b0000101 : tx_fifo_wdata <= version_l[15:8];
+			7'b0000100 : tx_fifo_wdata <= cnt_10ms[7:0];
+			7'b0000101 : tx_fifo_wdata <= cnt_10ms[15:8];
 			7'b0000110 : tx_fifo_wdata <= num_signal_l[7:0];
 			7'b0000111 : tx_fifo_wdata <= num_signal_l[15:8];
 			
 			7'b0001000 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0001001 : tx_fifo_wdata <= 8'h33;
-			7'b0001010 : tx_fifo_wdata <= {7'd0, digital0};
+			7'b0001010 : tx_fifo_wdata <= {7'd0, ~digital0};
 			7'b0001011 : tx_fifo_wdata <= 8'd0;
 			
 			7'b0001100 : tx_fifo_wdata <= {3'd0, cnt_signal};
 			7'b0001101 : tx_fifo_wdata <= 8'h33;
-			7'b0001110 : tx_fifo_wdata <= {7'd0, digital1};
+			7'b0001110 : tx_fifo_wdata <= {7'd0, ~digital1};
 			7'b0001111 : tx_fifo_wdata <= 8'd0;
 			
 			7'b0010000 : tx_fifo_wdata <= {3'd0, cnt_signal};
