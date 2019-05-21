@@ -162,6 +162,7 @@ wire [31:0] count;
 wire pulse_full;
 wire pulse_10ms;
 wire [15:0] cnt_10ms;
+wire pulse_1s;
 
 wire init_adc;
 
@@ -273,7 +274,8 @@ timer32 timer32(
 	.count(count),
 	.pulse_full(pulse_full),
 	.pulse_10ms(pulse_10ms),
-	.cnt_10ms(cnt_10ms)
+	.cnt_10ms(cnt_10ms),
+	.pulse_1s(pulse_1s)
 	);	
 	
 trans_ctrl_uart0 trans_ctrl_uart0(
@@ -321,6 +323,7 @@ trans_ctrl_uart1 #(
 	.clk(clk),
 	.rst(rst),
 	.ena(ena),
+	.pulse_1s(pulse_1s),
 	
 	.pulse0(x9b51_st),
 	.pulse1(x9b57_tr),

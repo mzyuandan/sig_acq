@@ -14,6 +14,7 @@ module trans_ctrl_uart1(
 	clk,
 	rst,
 	ena,
+	pulse_1s,
 	
 	pulse0,
 	pulse1,
@@ -46,6 +47,7 @@ parameter HEAD = 32'h7FFF7FFF;
 input clk;
 input rst;
 input ena;
+input pulse_1s;
 
 input pulse0;
 input pulse1;
@@ -101,6 +103,7 @@ generate
 			.clk(clk),
 			.rst(rst),
 			.ena(ena),
+			.pulse_1s(pulse_1s),
 			
 			.pulse(pulse[i]),
 			
