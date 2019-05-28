@@ -67,8 +67,8 @@ always @(posedge clk or negedge rst)
 		pulse_10ms <= 1'b0;
 	else if (clr)
 		pulse_10ms <= 1'b0;
-	else if (ena && count[20:0]==20'd0)	//10ms
-	//else if (ena && count[26:0]==32'd0)	//10us, for test
+	//else if (ena && count[20:0]==20'd0)	//10ms
+	else if (ena && count[26:0]==32'd0)	//10us, for test
 		pulse_10ms <= 1'b1;
 	else
 		pulse_10ms <= 1'b0;

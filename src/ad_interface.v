@@ -54,14 +54,14 @@ output sdo;
 input sdi;
 output cstart;
 
-output wire [13:0] ad_dat0;
-output wire [13:0] ad_dat1;
-output wire [13:0] ad_dat2;
-output wire [13:0] ad_dat3;
-output wire [13:0] ad_dat4;
-output wire [13:0] ad_dat5;
-output wire [13:0] ad_dat6;
-output wire [13:0] ad_dat7;
+output reg [13:0] ad_dat0;
+output reg [13:0] ad_dat1;
+output reg [13:0] ad_dat2;
+output reg [13:0] ad_dat3;
+output reg [13:0] ad_dat4;
+output reg [13:0] ad_dat5;
+output reg [13:0] ad_dat6;
+output reg [13:0] ad_dat7;
 
 
 reg int_l_r;
@@ -278,7 +278,7 @@ generate
 			
 		always @(posedge clk or negedge rst)
 			if (!rst)
-				ad_dat_acc[i] <= 24'd0;
+				ad_dat_acc[i] <= 24'd16384;
 			else if (wen_ad_dat)
 				ad_dat_acc[i] <= ad_dat_acc[i] + wdat_ad_dat[i];
 			else if (ren_ad_dat_r[1])
@@ -286,14 +286,62 @@ generate
 	end
 endgenerate
 
-assign ad_dat0 = ad_dat_acc	[0][23:10];
-assign ad_dat1 = ad_dat_acc	[1][23:10];
-assign ad_dat2 = ad_dat_acc	[2][23:10];
-assign ad_dat3 = ad_dat_acc	[3][23:10];
-assign ad_dat4 = ad_dat_acc	[4][23:10];
-assign ad_dat5 = ad_dat_acc	[5][23:10];
-assign ad_dat6 = ad_dat_acc	[6][23:10];
-assign ad_dat7 = ad_dat_acc	[7][23:10];
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat0 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat0 <= ad_dat_acc[0][23:10] - 5'd16;
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat1 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat1 <= ad_dat_acc[1][23:10] - 5'd16;
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat2 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat2 <= ad_dat_acc[2][23:10] - 5'd16;
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat3 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat3 <= ad_dat_acc[3][23:10] - 5'd16;
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat4 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat4 <= ad_dat_acc[4][23:10] - 5'd16;
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat5 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat5 <= ad_dat_acc[5][23:10] - 5'd16;
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat6 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat6 <= ad_dat_acc[6][23:10] - 5'd16;
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		ad_dat7 <= 14'd0;
+	else if (ren_ad_dat)
+		ad_dat7 <= ad_dat_acc[7][23:10] - 5'd16;
+
+// assign ad_dat0 = ad_dat_acc	[0][23:10];
+// assign ad_dat1 = ad_dat_acc	[1][23:10];
+// assign ad_dat2 = ad_dat_acc	[2][23:10];
+// assign ad_dat3 = ad_dat_acc	[3][23:10];
+// assign ad_dat4 = ad_dat_acc	[4][23:10];
+// assign ad_dat5 = ad_dat_acc	[5][23:10];
+// assign ad_dat6 = ad_dat_acc	[6][23:10];
+// assign ad_dat7 = ad_dat_acc	[7][23:10];
 
 
 
