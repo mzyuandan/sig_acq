@@ -197,6 +197,8 @@ wire [11:0] tx_fifo_usedw1;
 //wire [7:0] rx_fifo_rdata1;
 //wire tx_work1;
 //wire rx_overflow1;
+
+wire pulse_adst;
 	
 assign clk_arm = clk_25m;
 assign led = {x9b54_tp_test, x9b57_tr_test, led_blnk};
@@ -275,7 +277,8 @@ timer32 timer32(
 	.pulse_full(pulse_full),
 	.pulse_10ms(pulse_10ms),
 	.cnt_10ms(cnt_10ms),
-	.pulse_1s(pulse_1s)
+	.pulse_1s(pulse_1s),
+	.pulse_adst(pulse_adst)
 	);	
 	
 trans_ctrl_uart0 trans_ctrl_uart0(
@@ -309,6 +312,7 @@ trans_ctrl_uart0 trans_ctrl_uart0(
 	.pulse_full(pulse_full),
 	.pulse_10ms(pulse_10ms),
 	.cnt_10ms(cnt_10ms),
+	.pulse_adst(pulse_adst),
 	
 	.tx_fifo_wen(tx_fifo_wen0), 
 	.tx_fifo_wdata(tx_fifo_wdata0), 

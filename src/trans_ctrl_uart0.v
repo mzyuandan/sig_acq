@@ -41,6 +41,7 @@ module trans_ctrl_uart0(
 	pulse_full,
 	pulse_10ms,
 	cnt_10ms,
+	pulse_adst,
 	
 	tx_fifo_wen, 
 	tx_fifo_wdata, 
@@ -85,6 +86,7 @@ input [31:0] count;
 input pulse_full;
 input pulse_10ms;
 input [15:0] cnt_10ms;
+input pulse_adst;
 
 output reg tx_fifo_wen; 
 output reg [7:0] tx_fifo_wdata; 
@@ -96,7 +98,6 @@ reg st_adc_p;
 reg st_adc_pr;
 reg [10:0] cnt_st;
 
-wire val_dat0;
 wire [13:0] ad_dat00;
 wire [13:0] ad_dat01;
 wire [13:0] ad_dat02;
@@ -106,7 +107,6 @@ wire [13:0] ad_dat05;
 wire [13:0] ad_dat06;
 wire [13:0] ad_dat07;
 
-wire val_dat1;
 wire [13:0] ad_dat10;
 wire [13:0] ad_dat11;
 wire [13:0] ad_dat12;
@@ -115,9 +115,6 @@ wire [13:0] ad_dat14;
 wire [13:0] ad_dat15;
 wire [13:0] ad_dat16;
 wire [13:0] ad_dat17;
-
-reg val_dat;
-reg val_dat_r;
 
 reg trans;
 reg [1:0] cnt_byte;
@@ -143,7 +140,7 @@ assign num_signal_l = NUM_SIGNAL;
 always @(posedge clk or negedge rst)
 	if (!rst)
 		st_adc_p <= 1'b0;
-	else if (ena && pulse_10ms)
+	else if (ena && pulse_adst)
 		st_adc_p <= 1'b1;
 	else if (ena && cnt_st==11'd2047)
 		st_adc_p <= 1'b0;
@@ -154,7 +151,7 @@ always @(posedge clk_l)
 always @(posedge clk or negedge rst)
 	if (!rst)
 		cnt_st <= 11'd0;
-	else if (ena && pulse_10ms)
+	else if (ena && pulse_adst)
 		cnt_st <= 11'd0;
 	else if (st_adc_p)
 		cnt_st <= cnt_st + 1'd1;
@@ -182,7 +179,6 @@ ad_interface ad_interface0(
 	.sdi(sdi0),
 	.cstart(cstart0),
 	
-	.val_dat(val_dat0),
 	.ad_dat0(ad_dat00),
 	.ad_dat1(ad_dat01),
 	.ad_dat2(ad_dat02),
@@ -208,7 +204,6 @@ ad_interface ad_interface1(
 	.sdi(sdi1),
 	.cstart(cstart1),
 	
-	.val_dat(val_dat1),
 	.ad_dat0(ad_dat10),
 	.ad_dat1(ad_dat11),
 	.ad_dat2(ad_dat12),
@@ -218,17 +213,11 @@ ad_interface ad_interface1(
 	.ad_dat6(ad_dat16),
 	.ad_dat7(ad_dat17)	
 	);
-	
-always @(posedge clk)
-		val_dat <= val_dat0 && val_dat1;
-		
-always @(posedge clk)
-		val_dat_r <= val_dat;
 
 always @(posedge clk or negedge rst)
 	if (!rst)
 		trans <= 1'b0;
-	else if (ena && val_dat && !val_dat_r)
+	else if (ena && pulse_10ms)
 		trans <= 1'b1;
 	else if (cnt_byte==2'd3 && cnt_byteX4==NUM_WORD_M1)
 		trans <= 1'b0;
@@ -236,7 +225,7 @@ always @(posedge clk or negedge rst)
 always @(posedge clk or negedge rst)
 	if (!rst)
 		cnt_byte <= 2'd0;
-	else if (val_dat && !val_dat_r)
+	else if (pulse_10ms)
 		cnt_byte <= 2'd0;
 	else if (tx_fifo_wen_p)
 		cnt_byte <= cnt_byte + 1'd1;
@@ -244,7 +233,7 @@ always @(posedge clk or negedge rst)
 always @(posedge clk or negedge rst)
 	if (!rst)
 		cnt_byteX4 <= 5'd0;
-	else if (val_dat && !val_dat_r)
+	else if (pulse_10ms)
 		cnt_byteX4 <= 5'd0;
 	else if (tx_fifo_wen_p && cnt_byte==2'b11)
 		cnt_byteX4 <= cnt_byteX4 + 1'd1;

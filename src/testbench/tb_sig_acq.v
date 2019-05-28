@@ -206,7 +206,7 @@ always @(posedge sclk0 or negedge rst_board)
 
 always @(posedge sclk0 or negedge rst_board)
 	if (!rst_board)
-		reg_di0 <= 14'd0;
+		reg_di0 <= 14'd10000;
 	else if (fs0 && sdo_val0)
 		reg_di0 <= reg_di0 + 1'd1;
 	else if (reg_shift0)

@@ -25,7 +25,6 @@ module ad_interface(
 	sdi,
 	cstart,
 	
-	val_dat,
 	ad_dat0,
 	ad_dat1,
 	ad_dat2,
@@ -55,15 +54,14 @@ output sdo;
 input sdi;
 output cstart;
 
-output reg val_dat;
-output reg [13:0] ad_dat0;
-output reg [13:0] ad_dat1;
-output reg [13:0] ad_dat2;
-output reg [13:0] ad_dat3;
-output reg [13:0] ad_dat4;
-output reg [13:0] ad_dat5;
-output reg [13:0] ad_dat6;
-output reg [13:0] ad_dat7;
+output wire [13:0] ad_dat0;
+output wire [13:0] ad_dat1;
+output wire [13:0] ad_dat2;
+output wire [13:0] ad_dat3;
+output wire [13:0] ad_dat4;
+output wire [13:0] ad_dat5;
+output wire [13:0] ad_dat6;
+output wire [13:0] ad_dat7;
 
 
 reg int_l_r;
@@ -81,6 +79,14 @@ reg shift;
 reg [15:0] out_reg;
 reg [13:0] in_reg;
 wire [3:0] state;
+reg wen_ad_dat;
+reg [9:0] waddr_ad_dat;
+reg [13:0] wdat_ad_dat [7:0];
+reg ren_ad_dat;
+wire [9:0] raddr_ad_dat;
+wire [13:0] rdat_ad_dat [7:0];
+reg [23:0] ad_dat_acc [7:0];
+reg [1:0] ren_ad_dat_r;
 
 always @(posedge clk)
 	int_l_r <= int_l;
@@ -207,37 +213,88 @@ always @(posedge clk or negedge rst)
 		in_reg <= {in_reg[12:0], sdi};
 	else if (fifo_rd && cnt_conv==NUM_LOAD)
 		in_reg <= 14'd0;
-
+		
 always @(posedge clk or negedge rst)
 	if (!rst)
-		val_dat <= 1'b0;
+		wen_ad_dat <= 1'b0;
 	else if (st_adc)
-		val_dat <= 1'b0;
+		wen_ad_dat <= 1'b0;
 	else if (fifo_rd && cnt_conv==NUM_LOAD && cnt_chan==3'd0)
-		val_dat <= 1'b1;
+		wen_ad_dat <= 1'b1;
+	else
+		wen_ad_dat <= 1'b0;
+		
+always @(posedge clk)
+	ren_ad_dat <= wen_ad_dat;
+	
+always @(posedge clk)
+	ren_ad_dat_r <= {ren_ad_dat_r[0], ren_ad_dat};
 
 always @(posedge clk or negedge rst)
 	if (!rst) begin
-		ad_dat0 <= 14'd0;
-		ad_dat1 <= 14'd0;
-		ad_dat2 <= 14'd0;
-		ad_dat3 <= 14'd0;
-		ad_dat4 <= 14'd0;
-		ad_dat5 <= 14'd0;
-		ad_dat6 <= 14'd0;
-		ad_dat7 <= 14'd0;
+		wdat_ad_dat[0] <= 14'd0;
+		wdat_ad_dat[1] <= 14'd0;
+		wdat_ad_dat[2] <= 14'd0;
+		wdat_ad_dat[3] <= 14'd0;
+		wdat_ad_dat[4] <= 14'd0;
+		wdat_ad_dat[5] <= 14'd0;
+		wdat_ad_dat[6] <= 14'd0;
+		wdat_ad_dat[7] <= 14'd0;
 	end
 	else if (fifo_rd && cnt_conv==NUM_LOAD)
 		case (cnt_chan)
-			3'd0: ad_dat7 <= in_reg;
-			3'd1: ad_dat0 <= in_reg;
-			3'd2: ad_dat1 <= in_reg;
-			3'd3: ad_dat2 <= in_reg;
-			3'd4: ad_dat3 <= in_reg;
-			3'd5: ad_dat4 <= in_reg;
-			3'd6: ad_dat5 <= in_reg;
-			3'd7: ad_dat6 <= in_reg;
+			3'd0: wdat_ad_dat[7] <= in_reg;
+			3'd1: wdat_ad_dat[0] <= in_reg;
+			3'd2: wdat_ad_dat[1] <= in_reg;
+			3'd3: wdat_ad_dat[2] <= in_reg;
+			3'd4: wdat_ad_dat[3] <= in_reg;
+			3'd5: wdat_ad_dat[4] <= in_reg;
+			3'd6: wdat_ad_dat[5] <= in_reg;
+			3'd7: wdat_ad_dat[6] <= in_reg;
 		endcase
+
+		
+always @(posedge clk or negedge rst)
+	if (!rst)
+		waddr_ad_dat <= 10'd0;
+	else if (wen_ad_dat)
+		waddr_ad_dat <= waddr_ad_dat + 1'd1;
+
+assign raddr_ad_dat = waddr_ad_dat;
+		
+genvar i;
+generate
+	for(i=0; i<8; i=i+1)
+	begin: ad
+		ram_1024 ram_1024 (
+			.clock(clk),
+			.data(wdat_ad_dat[i]),
+			.rdaddress(raddr_ad_dat),
+			.rden(ren_ad_dat),
+			.wraddress(waddr_ad_dat),
+			.wren(wen_ad_dat),
+			.q(rdat_ad_dat[i])
+			);
+			
+		always @(posedge clk or negedge rst)
+			if (!rst)
+				ad_dat_acc[i] <= 24'd0;
+			else if (wen_ad_dat)
+				ad_dat_acc[i] <= ad_dat_acc[i] + wdat_ad_dat[i];
+			else if (ren_ad_dat_r[1])
+				ad_dat_acc[i] <= ad_dat_acc[i] - rdat_ad_dat[i];
+	end
+endgenerate
+
+assign ad_dat0 = ad_dat_acc	[0][23:10];
+assign ad_dat1 = ad_dat_acc	[1][23:10];
+assign ad_dat2 = ad_dat_acc	[2][23:10];
+assign ad_dat3 = ad_dat_acc	[3][23:10];
+assign ad_dat4 = ad_dat_acc	[4][23:10];
+assign ad_dat5 = ad_dat_acc	[5][23:10];
+assign ad_dat6 = ad_dat_acc	[6][23:10];
+assign ad_dat7 = ad_dat_acc	[7][23:10];
+
 
 
 endmodule
