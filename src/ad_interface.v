@@ -281,8 +281,10 @@ generate
 				ad_dat_acc[i] <= 24'd16384;
 			else if (wen_ad_dat)
 				ad_dat_acc[i] <= ad_dat_acc[i] + wdat_ad_dat[i];
-			else if (ren_ad_dat_r[1])
+			else if (ren_ad_dat_r[1] && ad_dat_acc[i]>=rdat_ad_dat[i])
 				ad_dat_acc[i] <= ad_dat_acc[i] - rdat_ad_dat[i];
+			else if (ren_ad_dat_r[1] && ad_dat_acc[i]<rdat_ad_dat[i])
+				ad_dat_acc[i] <= 24'd16384;
 	end
 endgenerate
 
